@@ -1,0 +1,9 @@
+# Corpus provenance
+
+Default source: publicly offered `pi_dec_1m.txt` from https://pi2e.ch/blog/2017/03/10/pi-digits-download/ (download URL: https://pi2e.ch/blog/wp-content/uploads/2017/03/pi_dec_1m.txt). The 2026-11-09 import read 1,000,002 source bytes, with SHA-256 `dd382ef6a0c1e8d920fb72f482d74826251ab97709520bc24f913cd8eb5fc839`, and produced exactly 1,000,000 parsed digits with SHA-256 `7806ee47461b49ef1f578e14461b2c83c09c6d7a9a914275da1d71e9cbbf7069`. These are measured hashes, not hashes published by the source. The corpus file is not committed to Git.
+
+The import script strips an optional leading `3.` and whitespace, requires exactly the requested digit count (or an explicit `--take-prefix` of a longer source), checks the known prefix and published 50-digit checkpoints ending at decimal positions 10,000, 12,000, and 50,000 from https://www.numberworld.org/digits/Pi/, writes hashed shards, and atomically selects the new manifest. These checks establish provenance and integrity of this import, not an independent mathematical proof of every digit. 100M and 1B imports use an operator-supplied source file and the same parser and manifest verification. The API exposes only the manifest that passes its startup hash and checkpoint checks.
+
+`scripts/generate_fixture.py` independently computes the first 1,000 decimal digits with Chudnovsky binary splitting; that checked-in fixture matches the imported source byte-for-byte. The importer and API compare the SHA-256 of their first 1,000 digits with this independently computed fixture hash. It does not independently verify the remaining 999,000 digits.
+
+The pi2e.ch download page offers the file publicly but does not state reuse terms or a published checksum in the inspected text. The repository distributes import code and provenance, not the digit file; operators should review source terms before redistributing datasets.
