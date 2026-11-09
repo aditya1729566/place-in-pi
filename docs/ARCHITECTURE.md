@@ -1,0 +1,7 @@
+# Architecture and operations
+
+The browser loads a Next.js static page and calls a separate FastAPI host. The API is the sole authority for text normalization, encoding, corpus metadata, search results, and digit windows. It validates the manifest at startup, then keeps a C++20 process running with read-only mapped shards. A version-bound SQLite prefix index is optional. Index candidates are verified against the original digit files; KMP scanning handles shorter patterns, absent indices, and timeout-aware fallback.
+
+The frontend does not store searches. Home-to-search navigation uses session storage, and result cursors contain a pattern digest, corpus version, and offset. A cursor is a navigation token, not an authentication mechanism. Position links contain only numeric coordinates. Search requests are bounded to 128 input code points and 384 decimal digits, result pages to 100 positions, and digit windows to 4,096 digits. Expensive search requests are rate-limited by client IP on each API process; production deployments should also limit body size and abusive traffic at the edge.
+
+Deployment split: a Node/Vercel frontend with `NEXT_PUBLIC_API_URL`, and a persistent API host with read-only `PI_CORPUS_DIR`, optional `PI_INDEX_FILE`, compiled `PI_ENGINE_BIN`, and a precise `PI_CORS_ORIGINS` allowlist. `/api/health` distinguishes available corpus, worker, and index; `/api/corpus` states actual coverage. The app remains usable without the index. A corpus version change requires an API restart; do not replace files behind a live mapped worker.

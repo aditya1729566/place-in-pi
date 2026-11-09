@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(pi_search LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_executable(pi_search src/main.cpp)
+target_compile_options(pi_search PRIVATE -Wall -Wextra -Wpedantic -O3)

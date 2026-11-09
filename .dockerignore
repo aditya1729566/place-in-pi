@@ -1,0 +1,10 @@
+.git
+.venv
+frontend/node_modules
+frontend/.next
+engine/build
+data/corpus
+data/index
+work
+outputs
+**/__pycache__
